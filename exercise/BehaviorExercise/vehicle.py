@@ -44,7 +44,7 @@ class StateTransition(object):
 		cost = 0
 		lane = trajectory_for_state[0]['lane']
 		if lane < 0 or lane >= 4:
-			cost = 0
+			cost = 1
 		print("valide lane cost: {}".format(cost))
 			
 		return cost
@@ -61,12 +61,15 @@ class StateTransition(object):
 		
 		delta_s = self.ego.goal_s - self.ego.s
 		
-		cost = 1- math.exp(-delta_lane/float(delta_s))
+		if  abs(delta_s) > 1:
+			cost = 1- math.exp(-delta_lane/float(delta_s))
+		else:
+			cost = (delta_lane)
 		print("lane choice cost: {}".format(cost))
 		return cost
 	def target_speed_cost(self,state, trajectory_for_state, predictions):
 		estimated_spped = trajectory_for_state[1]['s'] - trajectory_for_state[0]['s']
-		cost = abs(estimated_spped - self.ego.target_speed)/self.ego.target_speed
+		cost = abs(estimated_spped - self.ego.target_speed)/float(self.ego.target_speed)
 		print("target speed cost: {}".format(cost))
 		return cost
 	def collision_cost(self,state, trajectory_for_state, predictions):
@@ -85,14 +88,14 @@ class StateTransition(object):
 		return cost
 		
 	def choose_next_state(self,predictions, current_fsm_state, current_pose):
-		cost_functions = [self.valid_lane_cost, self.collision_cost, self.lane_choice_cost, self.collision_cost, self.prepare_lc_cost]
-		weights = [1000, 1000, 1, 1, 1]
+		cost_functions = [self.valid_lane_cost, self.collision_cost, self.lane_choice_cost, self.collision_cost, self.prepare_lc_cost, self.target_speed_cost]
+		weights = [1000, 1000, 10, 1, 1, 1]
 		next_state = self.transition_function(predictions, current_fsm_state, current_pose, cost_functions, weights)
 		return next_state
 	def transition_function(self, predictions, current_fsm_state, current_pose, cost_functions, weights):
 		# only consider states which can be reached from current FSM state.
 		possible_successor_states = self.successor_states(current_fsm_state)
-		print("current state {}".format(self.ego.state))
+		
 	
 		# keep track of the total cost of each state.
 		costs = []
@@ -126,6 +129,7 @@ class StateTransition(object):
 				min_cost = cost
 				best_next_state = state 
 	
+		print("current state={}, lane=[{}, speed={}, s={}".format(self.ego.state, self.ego.lane, self.ego.v, self.ego.s))
 		print("###Best state = {}".format(best_next_state))
 		return best_next_state 
 
@@ -286,6 +290,7 @@ class Vehicle(object):
 				if time == 0:
 					a = self.a
 				else:
+					#approximately the acceleration/time it takes to adjust the speed to target speed
 					a = delta_v / time
 				print ("raw a is {}".format(a))
 				if a > self.max_acceleration: a = self.max_acceleration

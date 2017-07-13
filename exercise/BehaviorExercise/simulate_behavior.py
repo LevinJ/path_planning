@@ -17,10 +17,10 @@ TRAFFIC_DENSITY   = 0.15
 MAX_ACCEL         = 2
 
 # s value and lane number of goal.
-GOAL              = (300, 3)
+GOAL              = (300, 0)
 
 # These affect the visualization
-FRAMES_PER_SECOND = 4
+FRAMES_PER_SECOND = 50
 AMOUNT_OF_ROAD_VISIBLE = 40
 
 def main():
@@ -30,10 +30,10 @@ def main():
 	ego_config = config = {
 	    'speed_limit' : SPEED_LIMIT,
 	    'num_lanes' : len(LANE_SPEEDS),
-	    'goal' : (300, 3),
+	    'goal' : GOAL,
 	    'max_acceleration': MAX_ACCEL
 	}
-	road.add_ego(2,0, ego_config)
+	road.add_ego(1,30, ego_config)
 	timestep = 0
 	while road.get_ego().s <= GOAL[0]:
 		timestep += 1

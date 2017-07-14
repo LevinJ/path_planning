@@ -11,9 +11,9 @@ class StateTransition(object):
 		if current_fsm_state == "PLCR":
 			return ["PLCR", "LCR"]
 		if current_fsm_state == "LCL":
-			return ["KL", "LCL"]
+			return ["KL"]
 		if current_fsm_state == "LCR":
-			return ["KL", "LCR"]
+			return ["KL"]
 		raise Exception("unexpected sate")
 	def generate_trajectory(self, state, current_pose, predictions):
 		if state == "KL":
@@ -129,7 +129,7 @@ class StateTransition(object):
 				min_cost = cost
 				best_next_state = state 
 	
-		print("current state={}, lane=[{}, speed={}, s={}".format(self.ego.state, self.ego.lane, self.ego.v, self.ego.s))
+		print("current state={}, lane=[{}, speed={}, s={}, a= {}".format(self.ego.state, self.ego.lane, self.ego.v, self.ego.s, self.ego.a))
 		print("###Best state = {}".format(best_next_state))
 		return best_next_state 
 

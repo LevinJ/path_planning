@@ -45,9 +45,12 @@ class Road(object):
 			v.increment()
 
 	def add_ego(self, lane_num, s, config_data):
+		v_id_temp = None
 		for v_id, v in self.vehicles.items():
 			if v.lane == lane_num and v.s == s:
-				del self.vehicles[v_id]
+				v_id_temp = v_id
+		if v_id_temp is not None:
+			del self.vehicles[v_id_temp]
 		ego = Vehicle(lane_num, s, self.lane_speeds[lane_num], 0)
 		ego.configure(config_data)
 		ego.state = "KL"

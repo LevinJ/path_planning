@@ -62,7 +62,6 @@ def search(grid, start, goal):
 # 					if grid[int(math.ceil(x2))][int(math.ceil(y2))] == 0:
 				#adjust the cost based on heuristic functon
 				distance = idx((x2-goal[0])) **2 + idx((y2-goal[1])) **2
-	# 			distance = (x2-goal[0]) **2 + (y2-goal[1]) **2
 				distance = math.sqrt(distance)
 				g2 += distance
 				opened.append((g2, x2, y2, theta2))

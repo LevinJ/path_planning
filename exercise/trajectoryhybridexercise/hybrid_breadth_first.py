@@ -1,5 +1,7 @@
 from math import pi, sqrt, sin, cos, tan, floor
 from matplotlib import pyplot as plt
+import math
+import numpy as np
 
 NUM_THETA_CELLS = 90
 SPEED = 1.45
@@ -56,11 +58,19 @@ def search(grid, start, goal):
 			# print "as indices...: {}, {}, {}".format(idx(x2), idx(y2), stack2)  
 			# print "closed dims {} x {} x {}".format(len(closed), len(closed[0]), len(closed[0][0]))
 			if closed[stack2][idx(x2)][idx(y2)] == 0 and grid[idx(x2)][idx(y2)] == 0:
-				
+# 				try:
+# 					if grid[int(math.ceil(x2))][int(math.ceil(y2))] == 0:
+				#adjust the cost based on heuristic functon
+				distance = idx((x2-goal[0])) **2 + idx((y2-goal[1])) **2
+	# 			distance = (x2-goal[0]) **2 + (y2-goal[1]) **2
+				distance = math.sqrt(distance)
+				g2 += distance
 				opened.append((g2, x2, y2, theta2))
 				closed[stack2][idx(x2)][idx(y2)] = next_state
 				came_from[stack2][idx(x2)][idx(y2)] = next
 				total_closed += 1
+# 				except:
+# 					pass
 			# except:
 			# 	print "ERROR"
 			# 	print "x2, y2, theta2: {}, {}, {}".format(x2,y2,theta2)
@@ -97,12 +107,17 @@ def expand(state):
 		next_states.append((g2, x2, y2, theta2))
 	return next_states
 
-def show_path(path, start, goal):
-    path.reverse()
-    X = [p[1] for p in path]
-    Y = [p[2] for p in path]
-    THETA = [p[3] for p in path]
-    plt.scatter(X,Y, color='black')
-    plt.scatter([start[0]], [start[1]], color='blue')
-    plt.scatter([goal[0]], [goal[1]], color='red')
-    plt.show()
+def show_path(path, start, goal, grid):
+	path.reverse()
+	print(np.array(path))
+	X = [p[1] for p in path]
+	Y = [p[2] for p in path]
+	THETA = [p[3] for p in path]
+	plt.scatter(X,Y, color='black')
+	plt.scatter([X[0]], [Y[0]], color='blue')
+	plt.scatter([X[-1]], [Y[-1]], color='red')
+	
+	#show the maze as well
+	gridx, gridy = np.array(grid).nonzero()
+	plt.scatter(gridx,gridy, marker="x")
+	plt.show()

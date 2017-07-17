@@ -56,8 +56,10 @@ def collision_cost(traj, target_vehicle, delta, T, predictions):
     Binary cost function which penalizes collisions.
     """
     nearest = nearest_approach_to_any_vehicle(traj, predictions)
-    if nearest < 2*VEHICLE_RADIUS: return 1.0
-    else : return 0.0
+    if nearest < 2*VEHICLE_RADIUS: 
+        return 1.0
+    else: 
+        return 0.0
 
 def buffer_cost(traj, target_vehicle, delta, T, predictions):
     """

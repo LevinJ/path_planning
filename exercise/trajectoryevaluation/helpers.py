@@ -68,6 +68,7 @@ def nearest_approach(traj, vehicle):
     s_,d_,T = traj
     s = to_equation(s_)
     d = to_equation(d_)
+#     closest_t = 0
     for i in range(100):
         t = float(i) / 100 * T
         cur_s = s(t)
@@ -76,7 +77,30 @@ def nearest_approach(traj, vehicle):
         dist = sqrt((cur_s-targ_s)**2 + (cur_d-targ_d)**2)
         if dist < closest:
             closest = dist
+#             closest_t = t
+#     cur_s = s(closest_t)
+#     cur_d = d(closest_t)
+#     targ_s, _, _, targ_d, _, _ = vehicle.state_in(closest_t)
+#     dist = sqrt((cur_s-targ_s)**2 + (cur_d-targ_d)**2)
+#     print("time {}, distance {},  sdc {}/{}, target {}/{}".format(closest_t, dist, cur_s, cur_d, targ_s, cur_d))
+            
     return closest
+
+def show_end_state(s_coeffs, d_coeffs, T):
+    s = s_coeffs
+    s_dot = differentiate(s)
+    s_d_dot = differentiate(s_dot)
+    
+    print("S {}".format((to_equation(s)(T), to_equation(s_dot)(T), to_equation(s_d_dot)(T))))
+    
+    d = d_coeffs
+    d_dot = differentiate(d)
+    d_d_dot = differentiate(d_dot)
+    
+    print("d {}".format((to_equation(d)(T), to_equation(d_dot)(T), to_equation(d_d_dot)(T))))
+    
+    
+    return
 
 def show_trajectory(s_coeffs, d_coeffs, T, vehicle=None):
     s = to_equation(s_coeffs)
@@ -98,6 +122,8 @@ def show_trajectory(s_coeffs, d_coeffs, T, vehicle=None):
     plt.scatter(X,Y,color="blue")
     if vehicle:
         plt.scatter(X2, Y2,color="red")
+    show_end_state(s_coeffs, d_coeffs, T)
+#     plt.gca().set_aspect('equal', adjustable='box')
     plt.show()
 
 def get_f_and_N_derivatives(coeffs, N=3):

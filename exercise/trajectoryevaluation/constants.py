@@ -6,8 +6,13 @@ SIGMA_T = 2.0
 MAX_JERK = 10 # m/s/s/s
 MAX_ACCEL= 10 # m/s/s
 
+MIN_SPEED = 0
+
 EXPECTED_JERK_IN_ONE_SEC = 2 # m/s/s
 EXPECTED_ACC_IN_ONE_SEC = 1 # m/s
 
 SPEED_LIMIT = 30
 VEHICLE_RADIUS = 1.5 # model vehicle as circle to simplify collision detection
+
+MAX_D = 4
+MIN_D = 0

@@ -67,10 +67,40 @@ def buffer_cost(traj, target_vehicle, delta, T, predictions):
     return logistic(2*VEHICLE_RADIUS / nearest)
     
 def stays_on_road_cost(traj, target_vehicle, delta, T, predictions):
-    pass
+    _, d_coeffs, t = traj
+    
+    d = to_equation(d_coeffs)
+    all_ds = [d(float(t)/100 * i) for i in range(100)]
+    
+    if max(all_ds) <= MAX_D and min(all_ds) >=MIN_D:
+        return 0
+    else:
+        return 1
+    
 
 def exceeds_speed_limit_cost(traj, target_vehicle, delta, T, predictions):
-    pass
+    s, _, t = traj
+    speed = differentiate(s)
+   
+    speed = to_equation(speed)
+    all_speeds = [speed(float(t)/100 * i) for i in range(100)]
+    max_speed = max(all_speeds)
+    
+    if max_speed > SPEED_LIMIT:
+        return 1
+    else:
+        return 0
+    
+
+def min_speed_cost(traj, target_vehicle, delta, T, predictions):
+    s, _, t = traj
+    speed = differentiate(s)
+   
+    speed = to_equation(speed)
+    all_speeds = [speed(float(t)/100 * i) for i in range(100)]
+    min_speed = min(all_speeds)
+    if min_speed < MIN_SPEED: return 1
+    else: return 0
 
 def efficiency_cost(traj, target_vehicle, delta, T, predictions):
     """

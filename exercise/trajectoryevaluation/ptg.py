@@ -15,6 +15,9 @@ WEIGHTED_COST_FUNCTIONS = [
     (buffer_cost,       1),
     (max_accel_cost,    1),
     (total_accel_cost,  1),
+    (min_speed_cost,    1),
+    (exceeds_speed_limit_cost, 1),
+    (stays_on_road_cost,    1)
 ]
 
 def PTG(start_s, start_d, target_vehicle, delta, T, predictions):
@@ -82,7 +85,7 @@ def calculate_cost(trajectory, target_vehicle, delta, goal_t, predictions, cost_
         new_cost = weight * cf(trajectory, target_vehicle, delta, goal_t, predictions)
         cost += new_cost
         if verbose:
-            print("cost for {} is \t {}".format(cf, new_cost))
+            print("cost for {} is \t {}".format(cf.__name__, new_cost))
     return cost
 
 def perturb_goal(goal_s, goal_d):
